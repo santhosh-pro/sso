@@ -22,6 +22,7 @@ export class AuthorizeController extends BaseController {
   async execute(
     @Query() param: AuthorizeRequest, @Req() req: Request,
     @Res() res: Response,): Promise<any> {
+    console.log('AuthorizeController: Session:', req.session);
     const { client_id, redirect_uri, code_challenge, code_challenge_method, state } = param;
     const userId = req.
       session.userId;

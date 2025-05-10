@@ -69,6 +69,7 @@ export class OAuthService {
   logout() {
     firstValueFrom(this.http
       .get(`${environment.oidc.issuer}/protocol/openid-connect/logout`, {
+        withCredentials:true,
         params: {
           id_token_hint: `${this.getAccessToken()}`,
         },

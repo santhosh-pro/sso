@@ -29,8 +29,13 @@ export class LogoutController extends BaseController {
         }
   
         // Clear the session cookie
-        res.clearCookie('connect.sid');  // Adjust cookie settings as needed
+        res.clearCookie('connect.sid', {
+          path: '/',
+          httpOnly: true,
+          secure: false, // must match how the cookie was set
+        });
   
+        console.log(req.session);
         // Redirect or respond with success
         res.status(HttpStatus.OK).json({ successMessage: 'Logged out successfully' });
       });
