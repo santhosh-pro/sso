@@ -1,0 +1,8 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { PrismaService } from '@db/prisma.service';
+
+@Injectable()
+export class {{pascalCase name}}Service {
+  @Inject() private readonly prismaService: PrismaService;
+
+}

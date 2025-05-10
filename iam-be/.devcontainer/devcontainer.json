@@ -1,0 +1,21 @@
+{
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "Prisma.prisma",
+        "vscode-icons-team.vscode-icons",
+        "GitHub.copilot",
+        "GitHub.vscode-github-actions",
+        "mjmlio.vscode-mjml"
+      ]
+    }
+  },
+  "forwardPorts": [3000],
+  "remoteUser": "nodeuser",
+  "postCreateCommand": "sudo chsh -s $(which zsh) nodeuser"
+}

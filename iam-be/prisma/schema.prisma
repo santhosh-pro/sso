@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+   binaryTargets = ["native", "darwin-arm64"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AuditLog {
+  id        String    @id @default(uuid())
+  action    String?   @map("action")
+  operation String?   @map("operation")
+  tableName String?   @map("table_name")
+  recordId  String?   @map("record_id")
+  oldValue  Json?     @map("old_value")
+  newValue  Json?     @map("new_value")
+  createdBy String?   @map("created_by")
+  createdAt DateTime? @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+
+  @@map("_audit_logs")
+}
+
+model MetaData {
+  id   String  @id
+  name String  @map("name")
+  desc String? @map("desc")
+  type String  @map("type")
+
+  @@map("meta_data")
+}
+
+model User {
+  id          String  @id @default(uuid())
+  firstName   String  @map("first_name")
+  lastName    String? @map("last_name")
+  email       String
+  username    String  @unique
+  password    String? @map("password")
+  phoneNumber String? @map("phone_number")
+  isVerified  Boolean @default(false) @map("is_verified")
+  isActive    Boolean @default(true) @map("is_active")
+
+  refreshTokens RefreshToken[]
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  authorizationCodes AuthorizationCode[]
+  userRoles          UserRole[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  clientId  String
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+
+  user   User   @relation(fields: [userId], references: [id])
+  client Client @relation(fields: [clientId], references: [id])
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  @@map("refresh_tokens")
+}
+
+model AuthorizationCode {
+  id                  String   @id @default(uuid())
+  code                String   @unique
+  clientId            String
+  userId              String
+  redirectUri         String
+  codeChallenge       String?
+  codeChallengeMethod String?
+  state               String?
+  expiresAt           DateTime
+
+  client Client @relation(fields: [clientId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  @@map("authorization_codes")
+}
+
+model Client {
+  id           String @id @default(uuid())
+  name         String
+  clientId     String @unique
+  clientSecret String
+
+  refreshTokens RefreshToken[]
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  authorizationCodes AuthorizationCode[]
+  redirectUrls       RedirectURL[]
+  originUrls         OriginURL[]
+
+  @@unique([clientId, clientSecret])
+  @@map("clients")
+}
+
+model RedirectURL {
+  id       String @id @default(uuid())
+  url      String
+  clientId String
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  client Client @relation(fields: [clientId], references: [id])
+
+  @@map("redirect_urls")
+}
+
+model OriginURL {
+  id       String @id @default(uuid())
+  url      String
+  clientId String
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  client Client @relation(fields: [clientId], references: [id])
+
+  @@map("origin_urls")
+}
+
+model Role {
+  id   String @id @default(uuid())
+  name String @unique
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  permissions PermissionRole[]
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id   String @id @default(uuid())
+  name String @unique
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  roles PermissionRole[]
+
+  @@map("permissions")
+}
+
+model UserRole {
+  id     String @id @default(uuid())
+  userId String
+  roleId String
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  user User @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@map("user_roles")
+}
+
+model PermissionRole {
+  id           String @id @default(uuid())
+  roleId       String
+  permissionId String
+
+  createdBy String?   @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+  createdIp String?   @map("created_ip")
+  updatedBy String?   @map("updated_by")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  updatedIp String?   @map("updated_ip")
+
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@map("permission_roles")
+}

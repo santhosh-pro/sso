@@ -1,0 +1,56 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ESNext",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "types": ["node", "express", "express-session"],
+    "paths": {
+      "@api/*": [
+        "src/features/api/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@background/*": [
+        "src/features/job/*"
+      ],
+      "@bcrypt/*": [
+        "src/shared/bcrypt/*"
+      ],
+      "@auth/*": [
+        "src/shared/auth/*"
+      ],
+      "@request-context/*": [
+        "src/shared/request-context/*"
+      ],
+      "@validator/*": [
+        "src/shared/validators/*"
+      ],
+      "@db/*": [
+        "prisma/*"
+      ],
+      "@util/*": [
+        "src/shared/utils/*"
+      ],
+      "@helper/*": [
+        "src/shared/helpers/*"
+      ],
+    }
+  },
+  "include": ["src/**/*.ts", "src/types/**/*.d.ts"]
+}

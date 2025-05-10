@@ -1,0 +1,36 @@
+import { Controller, Post, HttpCode, HttpStatus, Body, UseGuards,HttpException } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '@auth/auth.gaurd';
+import { RolesGuard } from '@auth/role.gurad';
+import { Authorize } from '@auth/authorize.decorator';
+import { {{pascalCase apiName}}Request } from './{{dashCase apiName}}-request';
+import { {{pascalCase apiName}}Response } from './{{dashCase apiName}}-response';
+import { BaseController } from '@core/base.controller';
+
+
+
+@ApiTags('{{pascalCase apiGroupName}}')
+{{#if isAuth}}
+@ApiBearerAuth()
+{{/if}}
+@Controller('{{dashCase moduleName}}/{{pathDashCase routePath}}')
+export class {{pascalCase apiName}}Controller extends BaseController  {
+
+  @Post()
+  @ApiResponse({status: HttpStatus.OK,description: '',type: {{pascalCase apiName}}Response,})
+  @ApiOperation({ operationId: '{{camelCase apiName}}' })
+{{#if isAuth}}
+@Authorize(/*Roles*/)
+{{/if}}
+  @HttpCode(200)
+  async execute(
+    @Body() body: {{pascalCase apiName}}Request,
+  ): Promise<{{pascalCase apiName}}Response> {
+     throw new HttpException('Method not implemented.', HttpStatus.NOT_IMPLEMENTED);
+  }
+}
