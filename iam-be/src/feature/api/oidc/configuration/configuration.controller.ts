@@ -18,10 +18,11 @@ export class ConfigurationController extends BaseController {
   async execute(): Promise<ConfigurationResponse> {
     const config = {
       issuer: 'http://localhost:3000',  // The URL of your OIDC provider
-      authorization_endpoint: 'http://localhost:3000/oauth2/authorize',
-      token_endpoint: 'http://localhost:3000/oauth2/token',
-      userinfo_endpoint: 'http://localhost:3000/oauth2/userinfo',
+      authorization_endpoint: 'http://localhost:3000/protocol/openid-connect/auth',
+      token_endpoint: 'http://localhost:3000/protocol/openid-connect/token',
+      userinfo_endpoint: 'http://localhost:3000/protocol/openid-connect/userinfo',
       jwks_uri: 'http://localhost:3000/.well-known/jwks.json',  // URL for public keys
+      end_session_endpoint: 'http://localhost:3000/protocol/openid-connect/logout',  // Added logout endpoint
       response_types_supported: ['code', 'id_token', 'token id_token'],
       subject_types_supported: ['public'],
       id_token_signing_alg_values_supported: ['RS256'],

@@ -14,12 +14,12 @@ type RedirectURLSeed = Omit<
 export const redirectUrlSeeds: RedirectURLSeed[] = [
   {
     id: 'redirect-url1-id',
-    url: 'http://localhost:4200',
+    url: 'http://localhost:4200/callback',
     clientId: 'app1',
   },
   {
     id: 'redirect-url2-id',
-    url: 'http://localhost:4202',
+    url: 'http://localhost:4202/callback',
     clientId: 'app2',
   },
 ];

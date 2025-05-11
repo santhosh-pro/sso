@@ -11,20 +11,7 @@ import { OAuthService } from './oauth.service';
 })
 export class AppComponent {
   private auth = inject(OAuthService);
-  token: string | null = null;
-
-  async ngOnInit() {
-    const hasCode = window.location.search.includes('code=');
-    if (hasCode) {
-      await this.auth.processOAuthCallback();
-    }
-
-    this.token = this.auth.getAccessToken();
-    console.log(this.token);
-    if (!this.token && !hasCode) {
-      this.auth.initOAuthFlow();
-    }
-  }
+  
   logout() {
     this.auth.logout();
   }

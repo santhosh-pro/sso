@@ -10,14 +10,23 @@ interface TokenResponse {
   refresh_token?: string;
 }
 
+interface OIDCConfiguration {
+  authorization_endpoint: string;
+  token_endpoint: string;
+  end_session_endpoint?: string;
+  issuer: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class OAuthService {
-
   private accessToken: string | null = null;
+  private oidcConfig: OIDCConfiguration | null = null;
 
   constructor(private http: HttpClient, private router: Router) {}
 
   async initOAuthFlow(): Promise<void> {
+    await this.loadOIDCConfig();
+
     const state = crypto.randomUUID();
     const codeVerifier = this.generateCodeVerifier();
     localStorage.setItem('code_verifier', codeVerifier);
@@ -45,10 +54,10 @@ export class OAuthService {
       this.storeTokens(tokenResponse);
       this.cleanupCallback();
 
-    // this.router.navigate(['/']);
+      await this.router.navigate(['/']);
     } catch (error) {
       console.error('Failed to process OAuth callback:', error);
-    //  await this.router.navigate(['/']);
+      await this.router.navigate(['/']);
       throw error;
     }
   }
@@ -67,34 +76,68 @@ export class OAuthService {
     return null;
   }
 
-  logout() {
-    firstValueFrom(this.http
-      .get(`${environment.oidc.issuer}/protocol/openid-connect/logout`, {
-        withCredentials: true,
-        params: {
-          id_token_hint: `${this.getAccessToken()}`,
-        },
-      })).then(() => {
+  isLoggedIn(): boolean {
+    const token = this.getAccessToken();
+    return !!token;
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await this.loadOIDCConfig();
+      
+      if (this.oidcConfig && this.oidcConfig.end_session_endpoint) {
+        const logoutUrl = this.oidcConfig.end_session_endpoint;
+        
+        const params = new HttpParams()
+          .set('post_logout_redirect_uri', environment.oidc.logoutUri);
+        
+        await firstValueFrom(this.http.get(logoutUrl, {withCredentials:true, params }));
+
         localStorage.removeItem('access_token');
         localStorage.removeItem('id_token');
         localStorage.removeItem('refresh_token');
         this.accessToken = null;
+
         this.router.navigate(['/']);
-      }).catch((error) => {
-        console.error('Logout failed:', error);
-      });
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('id_token');
+      localStorage.removeItem('refresh_token');
+      this.accessToken = null;
+      this.router.navigate(['/']);
+    }
   }
 
-  private parseCallbackParams(): { code: string | null; state: string | null } {
-    const params = new URLSearchParams(window.location.search);
-    return {
-      code: params.get('code'),
-      state: params.get('state'),
-    };
+  private async loadOIDCConfig(): Promise<void> {
+    if (this.oidcConfig) return;
+
+    const configUrl = `${environment.oidc.issuer}/.well-known/openid-configuration`;
+    this.oidcConfig = await firstValueFrom(this.http.get<OIDCConfiguration>(configUrl));
+  }
+
+  private buildAuthorizationUrl(state: string, codeChallenge: string): string {
+    if (!this.oidcConfig) throw new Error('OIDC config not loaded');
+
+    const params = new URLSearchParams({
+      response_type: 'code',
+      client_id: environment.oidc.clientId,
+      redirect_uri: environment.oidc.redirectUri,
+      scope: 'openid profile email',
+      state,
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
+    });
+
+    return `${this.oidcConfig.authorization_endpoint}?${params.toString()}`;
   }
 
   private async exchangeCodeForToken(code: string, codeVerifier: string): Promise<TokenResponse> {
-    const tokenUrl = `${environment.oidc.issuer}/protocol/openid-connect/token`;
+    await this.loadOIDCConfig();
+    if (!this.oidcConfig) throw new Error('OIDC config not loaded');
+
     const body = new HttpParams()
       .set('grant_type', 'authorization_code')
       .set('client_id', environment.oidc.clientId)
@@ -103,7 +146,7 @@ export class OAuthService {
       .set('code_verifier', codeVerifier);
 
     return firstValueFrom(
-      this.http.post<TokenResponse>(tokenUrl, body.toString(), {
+      this.http.post<TokenResponse>(this.oidcConfig.token_endpoint, body.toString(), {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
     );
@@ -123,7 +166,13 @@ export class OAuthService {
     history.replaceState(null, '', environment.oidc.redirectUri);
   }
 
- 
+  private parseCallbackParams(): { code: string | null; state: string | null } {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      code: params.get('code'),
+      state: params.get('state'),
+    };
+  }
 
   private generateCodeVerifier(): string {
     const array = new Uint8Array(32);
@@ -132,20 +181,6 @@ export class OAuthService {
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=+$/, '');
-  }
-
-  private buildAuthorizationUrl(state: string, codeChallenge: string): string {
-    const params = new URLSearchParams({
-      response_type: 'code',
-      client_id: environment.oidc.clientId,
-      redirect_uri: environment.oidc.redirectUri,
-      scope: 'openid profile email',
-      state,
-      code_challenge: codeChallenge,
-      code_challenge_method: 'S256',
-    });
-
-    return `${environment.oidc.issuer}/protocol/openid-connect/auth?${params.toString()}`;
   }
 
   private async generateCodeChallenge(verifier: string): Promise<string> {
