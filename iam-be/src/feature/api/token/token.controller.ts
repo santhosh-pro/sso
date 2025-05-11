@@ -10,70 +10,97 @@ import { TokenResponse } from './token-response';
 import { BaseController } from '@core/base.controller';
 import { AuthService } from '@auth/auth.service';
 import { OAuthService } from '../auth.service';
+import { TokenRequest } from './token-request';
 
-@ApiTags('Auth')
+@ApiTags('OIDC')
 @Controller('protocol/openid-connect/token')
 export class TokenController extends BaseController {
   @Inject() public authService: AuthService;
   @Inject() public oAuthService: OAuthService;
 
   @Post()
-  @ApiConsumes('application/x-www-form-urlencoded')
-  @ApiResponse({ status: HttpStatus.OK,description: '',type: TokenResponse, })
-  @ApiOperation({ operationId: 'token' })
-  @HttpCode(200)
-  async execute(
-    @Body('code') code: string,
-    @Body('code_verifier') code_verifier: string,
-    @Body('redirect_uri') redirect_uri: string,
-    @Body('client_id') client_id: string,
-    @Body('grant_type') grant_type: string,
-  ): Promise<TokenResponse> {
+@ApiConsumes('application/x-www-form-urlencoded')
+@ApiResponse({ status: HttpStatus.OK, description: '', type: TokenResponse })
+@ApiOperation({ operationId: 'token' })
+@HttpCode(200)
+async execute(
+  @Body() body: TokenRequest,
+): Promise<TokenResponse> {
+  const {
+    grant_type,
+    code,
+    code_verifier,
+    redirect_uri,
+    client_id,
+    refresh_token,
+  } = body;
 
-    // Ensure the grant type is correct
-    if (grant_type !== 'authorization_code') {
-      throw new BadRequestException('Invalid grant_type');
-    }
+  return await this.prismaService.client(async ({ dbContext }) => {
+    if (grant_type === 'authorization_code') {
+      if (!code || !code_verifier || !redirect_uri) {
+        throw new BadRequestException('Missing parameters for authorization_code flow');
+      }
 
-    return await this.prismaService.client(async ({ dbContext }) => {
-      // // Step 1: Find the authorization code
       // const authCode = await dbContext.authorizationCode.findUnique({
       //   where: { code },
       // });
 
-      // // Step 2: Validate authorization code
       // if (!authCode || authCode.expiresAt < new Date()) {
       //   throw new BadRequestException('Invalid or expired code');
       // }
 
-      // // Step 3: Ensure clientId and redirectUri match
       // if (authCode.clientId !== client_id || authCode.redirectUri !== redirect_uri) {
       //   throw new BadRequestException('Invalid client or redirect_uri');
       // }
 
-      // Step 4: Generate PKCE challenge and verify
-      const challenge = await this.generateCodeChallenge(code_verifier);
+      // const challenge = await this.generateCodeChallenge(code_verifier);
       // if (challenge !== authCode.codeChallenge) {
       //   throw new BadRequestException('PKCE verification failed');
       // }
 
-      // Step 5: Mark authorization code as used
-      await dbContext.authorizationCode.deleteMany({
-        where: { code },
-      });
+      // // Clean up used code
+      // await dbContext.authorizationCode.delete({ where: { code } });
 
-      // Step 6: Issue JWT tokens
-      const accessToken = await this.authService.sign({ name: 'authCode.userId' });
-      const refreshToken = await this.authService.sign({ name: 'authCode.userId' });
+      const accessToken = await this.authService.sign({ sub: 'authCode.userId' });
+      const newRefreshToken = await this.authService.sign({ sub: 'authCode.userId', type: 'refresh' });
 
-      // Step 7: Return the tokens
       return {
         access_token: accessToken,
-        refresh_token: refreshToken,
+        refresh_token: newRefreshToken,
         token_type: 'Bearer',
-        expires_in: 3600, // Access token expiration time in seconds
+        expires_in: 3600,
       };
-    });
+
+    } else if (grant_type === 'refresh_token') {
+      if (!refresh_token) {
+        throw new BadRequestException('Missing refresh_token');
+      }
+
+      let decoded: any;
+      try {
+        decoded = await this.authService.verify(refresh_token);
+      } catch {
+        throw new BadRequestException('Invalid refresh_token');
+      }
+
+      if (decoded.type !== 'refresh') {
+        throw new BadRequestException('Invalid token type');
+      }
+
+      const accessToken = await this.authService.sign({ sub: decoded.sub });
+      const newRefreshToken = await this.authService.sign({ sub: decoded.sub, type: 'refresh' });
+
+      return {
+        access_token: accessToken,
+        refresh_token: newRefreshToken,
+        token_type: 'Bearer',
+        expires_in: 3600,
+      };
+    }
+
+    throw new BadRequestException('Unsupported grant_type');
+  });
+
   }
 
   private async generateCodeChallenge(verifier: string): Promise<string> {

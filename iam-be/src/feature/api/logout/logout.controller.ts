@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+ 
 import { Controller, Get, Query, Req, Res, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 import {
@@ -7,9 +7,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { BaseController } from '@core/base.controller';
-import { LogoutResponse } from './logout-response';
 
-@ApiTags('Auth')
+@ApiTags('OIDC')
 @Controller('protocol/openid-connect/logout')
 export class LogoutController extends BaseController {
 

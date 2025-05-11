@@ -1,30 +1,69 @@
-import { Controller, Get, HttpCode, HttpStatus, Query, Req, Res } from '@nestjs/common';
+ 
 import {
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
-import { InfoRequest } from './info-request';
-import { InfoResponse } from './info-response';
+  Controller,
+  Get,
+  UnauthorizedException,
+  HttpCode,
+  HttpStatus,
+  Headers,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BaseController } from '@core/base.controller';
-import { Request, Response } from 'express';
+import { AuthService } from '@auth/auth.service';
+import { UserInfoResponse } from './info-response';
 
-@ApiTags('Auth')
-@Controller('/info')
-export class InfoController extends BaseController {
+@ApiTags('OIDC')
+@Controller('protocol/openid-connect')
+export class UserInfoController extends BaseController {
+  constructor(private readonly authService: AuthService) {
+    super();
+  }
 
-  @Get()
-  @ApiResponse({ status: HttpStatus.OK,description: '',type: InfoResponse, })
-  @ApiOperation({ operationId: 'info' })
-  @HttpCode(200)
-  async execute(
-    @Query() param: InfoRequest, @Req() req: Request,@Res() res: Response,
-    
-  ): Promise<any> {
+  @Get('userinfo')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ operationId: 'userInfo' })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns user profile information',
+    type: UserInfoResponse,
+  })
+  async getUserInfo(@Headers('authorization') authHeader: string): Promise<any> {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new UnauthorizedException('Missing or invalid Authorization header');
+    }
 
-    const userId = req.session.userId;
+    const token = authHeader.replace('Bearer ', '').trim();
 
-    res.redirect('http://localhost:4200/?code=60958cce-7003-4eb2-9e93-2e969b2372f5&state=fdcff648-369a-460b-944b-9b35487b1ab5');
+    let payload: any;
+    try {
+      payload = await this.authService.verify(token);
+    } catch (err) {
+      throw new UnauthorizedException('Invalid or expired access token');
+    }
 
+    // Lookup user info from DB or use claims directly from token
+    const user = await this.prismaService.client(async ({ dbContext }) => {
+      return dbContext.user.findUnique({
+        where: { id: payload.sub },
+        select: {
+          id: true,
+          firstName: true,
+          email: true,
+          username: true,
+        },
+      });
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return {
+      sub: user.id,
+      name: user.firstName,
+      email: user.email,
+      preferred_username: user.username,
+    };
   }
 }

@@ -9,7 +9,7 @@ import {
   Req,
   UnauthorizedException,
   Inject,
-  Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import {
@@ -21,6 +21,7 @@ import { LoginRequest } from './login-request';
 import { LoginResponse } from './login-response';
 import { BaseController } from '@core/base.controller';
 import { BcryptService } from '@bcrypt/bcrypt.service';
+import { SnakeToCamelInterceptor } from '@helper/snake-to-camel.interceptor';
 
 @ApiTags('Auth')
 @Controller('auth/login')
@@ -35,34 +36,36 @@ export class LoginController extends BaseController {
   })
   @ApiOperation({ operationId: 'login' })
   @HttpCode(200)
+  @UseInterceptors(SnakeToCamelInterceptor)
   async execute(
-    @Body() body: LoginRequest,
-    @Req() req: Request,
-    @Res() res: Response,
-    @Query('client_id') client_id: string,
-    @Query('redirect_uri') redirect_uri: string,
-    @Query('code_challenge') code_challenge: string,
-    @Query('code_challenge_method') code_challenge_method: string,
-    @Query('state') state?: string,
+  @Body() body: LoginRequest,
+  @Req() req: Request,
+  @Res() res: Response,
   ): Promise<any> {
-    const { username, password } = body;
+    const {
+      username,
+      password,
+      clientId,
+      redirectUri,
+      codeChallenge,
+      codeChallengeMethod,
+      state,
+    } = body;
 
     return await this.prismaService.client(async ({ dbContext }) => {
       const user = await dbContext.user.findUnique({ where: { username } });
 
-      if (!user || !this.bcryptService.comparePassword(password, user.password ?? '')) {
+      if (!user || !user.password || !(await this.bcryptService.comparePassword(password, user.password))) {
         throw new UnauthorizedException('Invalid credentials');
       }
 
-      // Save user ID to session for downstream access
       req.session.userId = user.id;
 
-      // Rebuild the redirect URL to the authorize endpoint
       const authUrl = new URL('http://localhost:3000/protocol/openid-connect/auth');
-      authUrl.searchParams.set('client_id', client_id);
-      authUrl.searchParams.set('redirect_uri', redirect_uri);
-      authUrl.searchParams.set('code_challenge', code_challenge);
-      authUrl.searchParams.set('code_challenge_method', code_challenge_method);
+      authUrl.searchParams.set('client_id', clientId);
+      authUrl.searchParams.set('redirect_uri', redirectUri);
+      authUrl.searchParams.set('code_challenge', codeChallenge);
+      authUrl.searchParams.set('code_challenge_method', codeChallengeMethod);
       if (state) authUrl.searchParams.set('state', state);
 
       console.log('LoginController: Redirecting to', authUrl.toString());

@@ -1,26 +1,28 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { IsString, IsNotEmpty, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
 
 export class TokenRequest {
-    @IsString()
-    @IsNotEmpty()
-    code: string;
-  
-    @IsString()
-    @IsNotEmpty()
-    code_verifier: string;
-  
-    @IsString()
-    @IsNotEmpty()
-    redirect_uri: string;
-  
-    @IsString()
-    @IsNotEmpty()
-    client_id: string;
-  
-    @IsEnum(['authorization_code'], {
-      message: 'grant_type must be "authorization_code"',
-    })
-    grant_type: 'authorization_code';
-  
+  @IsEnum(['authorization_code', 'refresh_token'], {
+    message: 'grant_type must be "authorization_code" or "refresh_token"',
+  })
+  grant_type: 'authorization_code' | 'refresh_token';
+
+  @IsString()
+  @IsOptional()
+  code?: string;
+
+  @IsString()
+  @IsOptional()
+  code_verifier?: string;
+
+  @IsString()
+  @IsOptional()
+  redirect_uri?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  client_id: string;
+
+  @IsString()
+  @IsOptional()
+  refresh_token?: string;
 }

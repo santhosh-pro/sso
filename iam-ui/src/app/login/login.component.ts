@@ -25,31 +25,32 @@ export class LoginComponent implements OnInit{
 
   onSubmit() {
     if (this.form.invalid) return;
-
+  
     const loginData = this.form.value;
     const queryParams = this.route.snapshot.queryParams;
-
-  const {
-    client_id,
-    redirect_uri,
-    code_challenge,
-    code_challenge_method,
-    state,
-  } = queryParams;
-
-  // Construct query string
-  const query = new URLSearchParams({
-    client_id,
-    redirect_uri,
-    code_challenge,
-    code_challenge_method,
-    ...(state && { state }) // include state if it exists
-  });
-
-  const url = `http://localhost:3000/auth/login?${query.toString()}`;
   
-    this.http.post(url, loginData, { withCredentials:true,}).subscribe({
-      next: (response:any) => {
+    const {
+      client_id,
+      redirect_uri,
+      code_challenge,
+      code_challenge_method,
+      state,
+    } = queryParams;
+  
+    // Combine login credentials and OIDC params into the request body
+    const body = {
+      ...loginData,
+      client_id,
+      redirect_uri,
+      code_challenge,
+      code_challenge_method,
+      ...(state && { state }) // include state if it exists
+    };
+  
+    const url = `http://localhost:3000/auth/login`;
+  
+    this.http.post(url, body, { withCredentials: true }).subscribe({
+      next: (response: any) => {
         window.location.href = response.redirectUrl;
         console.log('Login successful:', response);
       },
@@ -58,6 +59,7 @@ export class LoginComponent implements OnInit{
       }
     });
   }
+  
 
 
 }

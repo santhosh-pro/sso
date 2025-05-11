@@ -5,54 +5,28 @@ import { SanitizeUndefinedPipe } from '@validator/sanitize-undefined.pipe';
 import { AppValidationPipe } from '@validator/app-validation.pipe';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
+import { SnakeToCamelInterceptor } from '@helper/snake-to-camel.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   setupSwagger(
-    'Deploy',
+    'IAM',
     ['/', '/common/'],
     'API',
     `
-  <h3>📌 Welcome to the <strong>Deploy Module</strong> 🚀</h3>
+  <h3>📌 Welcome to the <strong>IAM</strong> 🚀</h3>
   `,
     'docs',
     app,
   );
 
   app.enableCors({
-    origin: true, // Allow both origins
-    credentials: true, // Allow credentials (cookies, sessions)
-    methods: ['GET', 'POST', 'OPTIONS'], // Explicitly allow methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
-  
-  // app.enableCors({
-  //   origin: ['http://localhost:4200', 'http://localhost:7000'], // Allow the frontend domains
-  //   credentials: true, // Allow sending cookies with the request
-  //   methods: ['GET', 'POST', 'OPTIONS'], // Allow necessary methods
-  //   allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
-  // });
-
-  // app.use((req, res, next) => {
-  //   if (req.method === 'OPTIONS') {
-  //     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:7000'); // or localhost:4200 depending on origin
-  //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  //     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  //     res.setHeader('Access-Control-Allow-Credentials', 'true');
-  //     return res.status(204).end();
-  //   }
-  
-  //   // Set headers for the redirect (if necessary)
-  //   if (req.url.includes('protocol/openid-connect/auth')) {
-  //     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200'); // Frontend domain
-  //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  //     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  //     res.setHeader('Access-Control-Allow-Credentials', 'true');
-  //   }
-  
-  //   next();
-  // });
 
   app.useGlobalPipes(
     new SanitizeUndefinedPipe(),
@@ -65,6 +39,7 @@ async function bootstrap() {
       },
     }),
   );
+  // app.useGlobalInterceptors(new SnakeToCamelInterceptor());
 
   app.use(cookieParser());
   app.use(
@@ -73,9 +48,9 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
       cookie: {
-        secure: false, // Set to true in production with HTTPS
-        sameSite: 'lax', // Or 'none' with secure: true for cross-origin
-        httpOnly: true, // Prevent client-side access to the cookie
+        secure: false,
+        sameSite: 'lax',
+        httpOnly: true,
       },
     }),
   );

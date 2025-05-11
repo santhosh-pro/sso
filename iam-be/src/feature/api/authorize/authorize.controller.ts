@@ -10,11 +10,10 @@ import { AuthorizeRequest } from './authorize-request';
 import { AuthorizeResponse } from './authorize-response';
 import { BaseController } from '@core/base.controller';
 
-@ApiTags('Auth')
+@ApiTags('OIDC')
 @Controller('protocol/openid-connect/auth')
 export class AuthorizeController extends BaseController {
 
-  // @UseGuards(SessionGuard)
   @Get()
   @ApiResponse({ status: HttpStatus.OK, description: '', type: AuthorizeResponse, })
   @ApiOperation({ operationId: 'authorize' })
