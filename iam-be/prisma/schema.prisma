@@ -62,7 +62,7 @@ model RefreshToken {
   id        String   @id @default(uuid())
   token     String   @unique
   userId    String
-  clientId  String
+  clientId  String 
   expiresAt DateTime
   revoked   Boolean  @default(false)
 
@@ -84,11 +84,12 @@ model AuthorizationCode {
   code                String   @unique
   clientId            String
   userId              String
-  redirectUri         String
-  codeChallenge       String?
-  codeChallengeMethod String?
+  redirectUri         String @map("redirect_uri")
+  codeChallenge       String? @map("code_challenge")
+  codeChallengeMethod String? @map("code_challenge_method")
   state               String?
-  expiresAt           DateTime
+  expiresAt           DateTime @map("expires_at")
+  isUsed            Boolean  @default(false) @map("is_used")
 
   client Client @relation(fields: [clientId], references: [id])
   user   User   @relation(fields: [userId], references: [id])

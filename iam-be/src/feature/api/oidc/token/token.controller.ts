@@ -9,8 +9,8 @@ import {
 import { TokenResponse } from './token-response';
 import { BaseController } from '@core/base.controller';
 import { AuthService } from '@auth/auth.service';
-import { OAuthService } from '../auth.service';
 import { TokenRequest } from './token-request';
+import { OAuthService } from '../../auth.service';
 
 @ApiTags('OIDC')
 @Controller('protocol/openid-connect/token')
@@ -41,25 +41,28 @@ async execute(
         throw new BadRequestException('Missing parameters for authorization_code flow');
       }
 
-      // const authCode = await dbContext.authorizationCode.findUnique({
-      //   where: { code },
-      // });
+      const authCode = await dbContext.authorizationCode.findUnique({
+        where: { code, isUsed: false },
+      });
 
-      // if (!authCode || authCode.expiresAt < new Date()) {
-      //   throw new BadRequestException('Invalid or expired code');
-      // }
+      if (!authCode || authCode.expiresAt < new Date()) {
+        throw new BadRequestException('Invalid or expired code');
+      }
 
-      // if (authCode.clientId !== client_id || authCode.redirectUri !== redirect_uri) {
-      //   throw new BadRequestException('Invalid client or redirect_uri');
-      // }
+      if (authCode.clientId !== client_id || authCode.redirectUri !== redirect_uri) {
+        throw new BadRequestException('Invalid client or redirect_uri');
+      }
 
-      // const challenge = await this.generateCodeChallenge(code_verifier);
-      // if (challenge !== authCode.codeChallenge) {
-      //   throw new BadRequestException('PKCE verification failed');
-      // }
+      const challenge = await this.generateCodeChallenge(code_verifier);
+      if (challenge !== authCode.codeChallenge) {
+        throw new BadRequestException('PKCE verification failed');
+      }
 
-      // // Clean up used code
-      // await dbContext.authorizationCode.delete({ where: { code } });
+      // Clean up used code
+      await dbContext.authorizationCode.update({
+        where: { id: authCode.id },
+        data: { isUsed: true },
+      });
 
       const accessToken = await this.authService.sign({ sub: 'authCode.userId' });
       const newRefreshToken = await this.authService.sign({ sub: 'authCode.userId', type: 'refresh' });

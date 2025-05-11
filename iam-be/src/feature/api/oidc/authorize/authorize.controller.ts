@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Controller, Get, Query, Req, Res, HttpStatus, HttpCode } from '@nestjs/common';
+import { Controller, Get, Query, Req, Res, HttpStatus, HttpCode, BadRequestException } from '@nestjs/common';
 import { Request, Response } from 'express';
 import {
   ApiOperation,
@@ -38,38 +38,33 @@ export class AuthorizeController extends BaseController {
     }
 
     return await this.prismaService.client(async ({ dbContext }) => {
-      // const client = await dbContext.client.findUnique({
-      //   where: { clientId: client_id },
-      //   include: { redirectUrls: true },
-      // });
+      const client = await dbContext.client.findUnique({
+        where: { clientId: client_id },
+        include: { redirectUrls: true },
+      });
 
-      // if (!client || !client.redirectUrls.some((url: { url: string }) => url.url === redirect_uri)) {
-      //   throw new BadRequestException('Invalid client or redirect_uri');
-      // }
+      if (!client || !client.redirectUrls.some((url: { url: string }) => url.url === redirect_uri)) {
+        throw new BadRequestException('Invalid client or redirect_uri');
+      }
 
       const code = crypto.randomUUID();
-      // await dbContext.authorizationCode.create({
-      //   data: {
-      //     code,
-      //     clientId: client.id,
-      //     userId,
-      //     redirectUri: redirect_uri,
-      //     codeChallenge: code_challenge,
-      //     codeChallengeMethod: code_challenge_method,
-      //     state,
-      //     expiresAt: new Date(Date.now() + 5 * 60 * 1000),
-      //   },
-      // });
+      await dbContext.authorizationCode.create({
+        data: {
+          code,
+          clientId: client.id,
+          userId,
+          redirectUri: redirect_uri,
+          codeChallenge: code_challenge,
+          codeChallengeMethod: code_challenge_method,
+          state,
+          expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+        },
+      });
 
       const redirectUrl = new URL(redirect_uri);
       redirectUrl.searchParams.set('code', code);
       if (state) redirectUrl.searchParams.set('state', state);
 
-      console.log('AuthorizeController: Redirecting to', redirectUrl.toString());
-      // res.json({
-      //   code,
-      //   redirectUrl: redirectUrl.toString(),
-      // });
        res.redirect(redirectUrl.toString());
     });
   }

@@ -41,7 +41,7 @@ export class LoginController extends BaseController {
   @Body() body: LoginRequest,
   @Req() req: Request,
   @Res() res: Response,
-  ): Promise<any> {
+  ): Promise<LoginResponse | void> {
     const {
       username,
       password,

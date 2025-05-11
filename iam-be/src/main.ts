@@ -39,7 +39,7 @@ async function bootstrap() {
       },
     }),
   );
-  // app.useGlobalInterceptors(new SnakeToCamelInterceptor());
+ // app.useGlobalInterceptors(new SnakeToCamelInterceptor());
 
   app.use(cookieParser());
   app.use(
