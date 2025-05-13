@@ -7,16 +7,18 @@ export class AuthService {
   @Inject() jwtService: JwtService;
   @Inject('AUTH_OPTIONS') private readonly appConfig: AuthModuleOptions;
 
-  async sign(payload: any, secret?: string, expiresIn?: string) {
+  async sign(payload: any, jwtPrivateKey?: string, expiresIn?: string) {
     return this.jwtService.sign(payload, {
-      secret: secret ?? this.appConfig.jwtSecret,
+      algorithm: 'RS256',
+      secret: jwtPrivateKey ?? this.appConfig.jwtPrivateKey,
       expiresIn: expiresIn ?? this.appConfig.jwtExpire,
     });
   }
 
-  async verify(token: string, secret?: string) {
+  async verify(token: string, jwtPublicKey?: string) {
     return this.jwtService.verify(token, {
-      secret: secret ?? this.appConfig.jwtSecret,
+     algorithms: ['RS256'],
+     publicKey: jwtPublicKey ?? this.appConfig.jwtPublicKey,
     });
   }
 

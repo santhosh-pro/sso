@@ -11,7 +11,7 @@ import { BaseController } from '@core/base.controller';
 @Controller('.well-known/openid-configuration')
 export class ConfigurationController extends BaseController {
 
-   @Get()
+  @Get()
   @ApiResponse({ status: HttpStatus.OK,description: '',type: ConfigurationResponse, })
   @ApiOperation({ operationId: 'configuration' })
   @HttpCode(200)

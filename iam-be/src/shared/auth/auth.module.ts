@@ -13,7 +13,8 @@ import { JwtAuthStrategy } from './jwt/jwt.strategy';
 import { AuthorizeGuard } from './authorize.gurad';
 
 export interface AuthModuleOptions {
-  jwtSecret: string;
+  jwtPrivateKey: string;
+  jwtPublicKey: string;
   jwtExpire: string;
   userAccessControlKey: string;
 }
@@ -35,8 +36,9 @@ export class AuthModule {
       imports: [
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.register({
-          secret: options.jwtSecret,
-          signOptions: { expiresIn: options.jwtExpire },
+          privateKey: options.jwtPrivateKey,
+          publicKey: options.jwtPublicKey,
+          signOptions: { algorithm: 'HS256',expiresIn: options.jwtExpire },
         }),
       ],
       providers: [
@@ -78,8 +80,9 @@ export class AuthModule {
         PassportModule.register({ defaultStrategy: 'jwt' }),
         JwtModule.registerAsync({
           useFactory: async (authOptions: AuthModuleOptions) => ({
-            secret: authOptions.jwtSecret,
-            signOptions: { expiresIn: authOptions.jwtExpire },
+            privateKey: authOptions.jwtPrivateKey,
+            publicKey: authOptions.jwtPublicKey,
+            signOptions: { algorithm: 'HS256', expiresIn: authOptions.jwtExpire },
           }),
           inject: ['AUTH_OPTIONS'],
         }),

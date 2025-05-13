@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-   binaryTargets = ["native", "darwin-arm64"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "darwin-arm64"]
 }
 
 datasource db {
@@ -32,14 +32,22 @@ model MetaData {
   @@map("meta_data")
 }
 
+enum Role {
+  MEMBER
+  MODRATOR
+  DEV
+  SUPER_ADMIN
+}
+
 model User {
   id          String  @id @default(uuid())
   firstName   String  @map("first_name")
   lastName    String? @map("last_name")
   email       String
+  phoneNumber String? @map("phone_number")
   username    String  @unique
   password    String? @map("password")
-  phoneNumber String? @map("phone_number")
+  role        Role    @default(MEMBER)
   isVerified  Boolean @default(false) @map("is_verified")
   isActive    Boolean @default(true) @map("is_active")
 
@@ -53,7 +61,6 @@ model User {
   updatedIp String?   @map("updated_ip")
 
   authorizationCodes AuthorizationCode[]
-  userRoles          UserRole[]
 
   @@map("users")
 }
@@ -62,7 +69,7 @@ model RefreshToken {
   id        String   @id @default(uuid())
   token     String   @unique
   userId    String
-  clientId  String 
+  clientId  String
   expiresAt DateTime
   revoked   Boolean  @default(false)
 
@@ -84,12 +91,12 @@ model AuthorizationCode {
   code                String   @unique
   clientId            String
   userId              String
-  redirectUri         String @map("redirect_uri")
-  codeChallenge       String? @map("code_challenge")
-  codeChallengeMethod String? @map("code_challenge_method")
+  redirectUri         String   @map("redirect_uri")
+  codeChallenge       String?  @map("code_challenge")
+  codeChallengeMethod String?  @map("code_challenge_method")
   state               String?
   expiresAt           DateTime @map("expires_at")
-  isUsed            Boolean  @default(false) @map("is_used")
+  isUsed              Boolean  @default(false) @map("is_used")
 
   client Client @relation(fields: [clientId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
@@ -121,7 +128,6 @@ model Client {
 
   authorizationCodes AuthorizationCode[]
   redirectUrls       RedirectURL[]
-  originUrls         OriginURL[]
 
   @@unique([clientId, clientSecret])
   @@map("clients")
@@ -142,90 +148,4 @@ model RedirectURL {
   client Client @relation(fields: [clientId], references: [id])
 
   @@map("redirect_urls")
-}
-
-model OriginURL {
-  id       String @id @default(uuid())
-  url      String
-  clientId String
-
-  createdBy String?   @map("created_by")
-  createdAt DateTime  @default(now()) @map("created_at")
-  createdIp String?   @map("created_ip")
-  updatedBy String?   @map("updated_by")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-  updatedIp String?   @map("updated_ip")
-
-  client Client @relation(fields: [clientId], references: [id])
-
-  @@map("origin_urls")
-}
-
-model Role {
-  id   String @id @default(uuid())
-  name String @unique
-
-  createdBy String?   @map("created_by")
-  createdAt DateTime  @default(now()) @map("created_at")
-  createdIp String?   @map("created_ip")
-  updatedBy String?   @map("updated_by")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-  updatedIp String?   @map("updated_ip")
-
-  permissions PermissionRole[]
-  users       UserRole[]
-
-  @@map("roles")
-}
-
-model Permission {
-  id   String @id @default(uuid())
-  name String @unique
-
-  createdBy String?   @map("created_by")
-  createdAt DateTime  @default(now()) @map("created_at")
-  createdIp String?   @map("created_ip")
-  updatedBy String?   @map("updated_by")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-  updatedIp String?   @map("updated_ip")
-
-  roles PermissionRole[]
-
-  @@map("permissions")
-}
-
-model UserRole {
-  id     String @id @default(uuid())
-  userId String
-  roleId String
-
-  createdBy String?   @map("created_by")
-  createdAt DateTime  @default(now()) @map("created_at")
-  createdIp String?   @map("created_ip")
-  updatedBy String?   @map("updated_by")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-  updatedIp String?   @map("updated_ip")
-
-  user User @relation(fields: [userId], references: [id])
-  role Role @relation(fields: [roleId], references: [id])
-
-  @@map("user_roles")
-}
-
-model PermissionRole {
-  id           String @id @default(uuid())
-  roleId       String
-  permissionId String
-
-  createdBy String?   @map("created_by")
-  createdAt DateTime  @default(now()) @map("created_at")
-  createdIp String?   @map("created_ip")
-  updatedBy String?   @map("updated_by")
-  updatedAt DateTime? @updatedAt @map("updated_at")
-  updatedIp String?   @map("updated_ip")
-
-  role       Role       @relation(fields: [roleId], references: [id])
-  permission Permission @relation(fields: [permissionId], references: [id])
-
-  @@map("permission_roles")
 }

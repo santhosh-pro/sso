@@ -111,6 +111,33 @@ export class OAuthService {
     }
   }
 
+  // async logout(): Promise<void> {
+  //   try {
+  //     await this.loadOIDCConfig();
+  
+  //     if (this.oidcConfig && this.oidcConfig.end_session_endpoint) {
+  //       localStorage.removeItem('access_token');
+  //       localStorage.removeItem('id_token');
+  //       localStorage.removeItem('refresh_token');
+  //       this.accessToken = null;
+  
+  //       const redirectUri = encodeURIComponent(environment.oidc.logoutUri);
+  //       const logoutUrl = `${this.oidcConfig.end_session_endpoint}?post_logout_redirect_uri=${redirectUri}`;
+  //       window.location.href = logoutUrl;
+  //     }
+  //   } catch (error) {
+  //     console.error('Logout failed:', error);
+  
+  //     localStorage.removeItem('access_token');
+  //     localStorage.removeItem('id_token');
+  //     localStorage.removeItem('refresh_token');
+  //     this.accessToken = null;
+  
+  //     this.router.navigate(['/']);
+  //   }
+  // }
+  
+
   private async loadOIDCConfig(): Promise<void> {
     if (this.oidcConfig) return;
 

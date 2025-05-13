@@ -5,7 +5,6 @@ import { SanitizeUndefinedPipe } from '@validator/sanitize-undefined.pipe';
 import { AppValidationPipe } from '@validator/app-validation.pipe';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import { SnakeToCamelInterceptor } from '@helper/snake-to-camel.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

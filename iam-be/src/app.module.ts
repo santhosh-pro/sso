@@ -18,8 +18,10 @@ import { ApiModule } from './feature/api/api.module';
     AuthModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        jwtSecret:
-          configService.get<AppConfig>('app')?.jwtSecret ?? 'defaultJwtSecret',
+        jwtPrivateKey:
+          configService.get<AppConfig>('app')?.jwtPrivateKey ?? 'defaultJwtSecret',
+        jwtPublicKey:
+          configService.get<AppConfig>('app')?.jwtPublicKey ?? 'defaultJwtPublicKey',
         jwtExpire:
           configService.get<AppConfig>('app')?.jwtExpire ?? 'defaultJwtExpire',
         userAccessControlKey: 'role',
