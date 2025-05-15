@@ -8,7 +8,7 @@ import {SvgIconComponent} from "angular-svg-icon";
     SvgIconComponent
   ],
   templateUrl: './app-svg-icon.component.html',
-  styleUrl: './app-svg-icon.component.scss'
+  styleUrl: './app-svg-icon.component.css'
 })
 export class AppSvgIconComponent {
 

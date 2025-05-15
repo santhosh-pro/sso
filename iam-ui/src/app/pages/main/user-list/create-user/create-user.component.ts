@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { BaseOverlayComponent } from "../../../../shared/components/overlay/base-overlay/base-overlay.component";
-import { TextInputComponent } from "../../../../shared/inputs/text-input/text-input.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
-import { BaseComponent } from '@shared/base/base-component';
 import { ApiService } from '@core/api/api.service';
 import { DialogRef } from '@angular/cdk/dialog';
 import { CreateUserResponse, GetRoleListResponse } from '@core/api/model';
-import { State } from '@shared/public-api';
-import { SingleSelectionFieldComponent } from "../../../../shared/inputs/single-selection-field/single-selection-field.component";
+import { TextInputComponent } from '@shared/components/input/text-input/text-input.component';
+import { SingleSelectionFieldComponent } from '@shared/components/single-selection-field/single-selection-field.component';
+import { State } from '@shared/core/base-state';
+import { BaseComponent } from '@shared/core/base-component';
 
 @Component({
   selector: 'app-create-user',

@@ -3,13 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '@core/api/api.service';
 import { GetUserListItem, GetUserListParams, GetUserListResponse } from '@core/api/model';
 import { AuthHelperService } from '@core/auth-helper.service';
-import { BaseComponent } from 'src/app/shared/base/base-component';
-import { State } from 'src/app/shared/base/base-state';
 import { ColumnGroup, FilterEvent, TableActionEvent, TableStateEvent, DataTableComponent, ContextMenuActionConfig } from 'src/app/shared/components/data-table/data-table.component';
 import { OverlayService } from 'src/app/shared/components/overlay/overlay.service';
 import { ButtonComponent } from "../../../shared/components/button/button.component";
 import { CreateUserComponent } from './create-user/create-user.component';
 import { RouterModule } from '@angular/router';
+import { State } from '@shared/core/base-state';
+import { BaseComponent } from '@shared/core/base-component';
 
 @Component({
   selector: 'app-user-list',

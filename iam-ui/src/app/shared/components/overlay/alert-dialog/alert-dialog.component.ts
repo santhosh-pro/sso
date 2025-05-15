@@ -9,7 +9,7 @@ import {ButtonComponent} from '../../button/button.component';
     ButtonComponent,
   ],
   templateUrl: './alert-dialog.component.html',
-  styleUrl: './alert-dialog.component.scss'
+  styleUrl: './alert-dialog.component.css'
 })
 export class AlertDialogComponent {
 

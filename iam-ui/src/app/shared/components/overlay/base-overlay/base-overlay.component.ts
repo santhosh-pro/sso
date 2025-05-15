@@ -15,7 +15,7 @@ import {
   imports: [],
   templateUrl: './base-overlay.component.html',
   standalone: true,
-  styleUrl: './base-overlay.component.scss'
+  styleUrl: './base-overlay.component.css'
 })
 export class BaseOverlayComponent implements AfterViewInit {
 

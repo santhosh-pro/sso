@@ -1,7 +1,0 @@
-@if (control()?.errors && hasErrors) {
-  <div class="flex mt-1">
-        <span class="text-caption text-red-500">
-          {{ control()?.errors! | humanizeFormMessages: errorMessages() }}
-        </span>
-  </div>
-}

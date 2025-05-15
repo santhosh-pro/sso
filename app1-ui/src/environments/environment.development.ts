@@ -6,6 +6,6 @@ export const environment = {
         issuer: 'http://localhost:3000',
         clientId: 'app1',
         redirectUri: 'http://localhost:4201/callback',
-        logoutUri: 'http://localhost:4200',
+        logoutUri: 'http://localhost:4201',
     }
 };

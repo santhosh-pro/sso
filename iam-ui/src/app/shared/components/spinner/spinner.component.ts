@@ -8,7 +8,7 @@ import {NgClass} from "@angular/common";
     NgClass
   ],
   templateUrl: './spinner.component.html',
-  styleUrl: './spinner.component.scss'
+  styleUrl: './spinner.component.css'
 })
 export class SpinnerComponent {
   borderColor = input('border-primary-500');

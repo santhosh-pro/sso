@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { OAuthService } from './shared/oauth.service';
 import { LoaderComponent } from "./shared/components/loader/loader.component";
 import { ToasterComponent } from "./shared/components/toast/components/toaster/toaster.component";
+import { OAuthService } from '@core/oauth.service';
 
 @Component({
   selector: 'app-root',

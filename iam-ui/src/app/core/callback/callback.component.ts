@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { OAuthService } from 'src/app/shared/oauth.service';
+import { OAuthService } from '@core/oauth.service';
 
 @Component({
   selector: 'app-callback',

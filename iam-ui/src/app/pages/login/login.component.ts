@@ -1,13 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { TextInputComponent } from '@shared/inputs/text-input/text-input.component';
 import { ButtonComponent } from "../../shared/components/button/button.component";
-import { State } from '@shared/public-api';
 import { LoginResponse } from '@core/api/model';
-import { BaseComponent } from '@shared/base/base-component';
 import { ApiService } from '@core/api/api.service';
+import { TextInputComponent } from '@shared/components/input/text-input/text-input.component';
+import { BaseComponent } from '@shared/core/base-component';
+import { State } from '@shared/core/base-state';
 
 @Component({
   selector: 'app-login',

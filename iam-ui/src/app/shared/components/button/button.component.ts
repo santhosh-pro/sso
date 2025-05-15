@@ -13,7 +13,7 @@ import {AppSvgIconComponent} from "../app-svg-icon/app-svg-icon.component";
     AppSvgIconComponent
   ],
   templateUrl: './button.component.html',
-  styleUrl: './button.component.scss'
+  styleUrl: './button.component.css'
 })
 export class ButtonComponent {
   elementRef = inject(ElementRef);

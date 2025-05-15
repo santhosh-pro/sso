@@ -25,6 +25,13 @@
             </svg>
           </button>
 
+          <!-- Dropdown Menu -->
+          @if (dropdownOpen) {
+            <div class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg py-2 z-50">
+              <a routerLink="/profile" class="block px-4 py-2 hover:bg-gray-100">View / Update Profile</a>
+              <button (click)="logout()" class="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
+            </div>
+          }
         </div>
 
       </div>

@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
-import { OAuthService } from '@shared/oauth.service';
+import { OAuthService } from '@core/oauth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(OAuthService);

@@ -12,27 +12,27 @@ import {
   Type,
   ViewChild
 } from '@angular/core';
-import { State } from '../../base/base-state';
 import { PaginationComponent, PaginationEvent } from '../pagination/pagination.component';
-import { NoDataTableComponent } from '../no-data-table/no-data-table.component';
 import { ShimmerComponent } from '../shimmer/shimmer.component';
 import { DatePipe, NgClass } from '@angular/common';
-import { resolveTemplateWithObject } from '../../common-utils/template-resolver';
 import { AppSvgIconComponent } from '../app-svg-icon/app-svg-icon.component';
 import { StatusBadgeComponent } from '../status-badge/status-badge.component';
-import { SortableTableDirective, TableSortEvent } from '../_base/base-table/sortable-table.directive';
-import { TableResizableColumnsDirective } from '../_base/base-table/table-resizable-columns.directive';
+import { SortableTableDirective, TableSortEvent } from './base-table/sortable-table.directive';
+import { TableResizableColumnsDirective } from './base-table/table-resizable-columns.directive';
 import { Overlay, OverlayConfig } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
-import { CheckboxComponent } from '../../inputs/checkbox/checkbox.component';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TextInputComponent } from '../../inputs/text-input/text-input.component';
 import { TextButtonSmall } from '../text-button-small/text-button-small.component';
 import { DynamicRendererComponent } from '../dynamic-renderer/dynamic-renderer.component';
-import { BaseControlValueAccessorV3 } from '../../base/base-control-value-accessor-v3';
-import { ContextMenuButtonAction, ContextMenuButtonComponent } from '@shared/public-api';
-import { MultiSelectDropdownComponent } from "../../inputs/multi-select-dropdown/multi-select-dropdown.component";
-import { DateInputComponent, InputDateFormat } from '../../inputs/date-input/date-input.component';
+import { BaseControlValueAccessorV3 } from '../../core/base-control-value-accessor-v3';
+import { DateInputComponent, InputDateFormat } from '../input/date-input/date-input.component';
+import { State } from '@shared/core/base-state';
+import { NoDataTableComponent } from './no-data-table/no-data-table.component';
+import { resolveTemplateWithObject } from '@shared/core/template-resolver';
+import { TextInputComponent } from '../input/text-input/text-input.component';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { ContextMenuButtonAction, ContextMenuButtonComponent } from '../context-menu-button/context-menu-button.component';
+import { MultiSelectDropdownComponent } from '../multi-select-dropdown/multi-select-dropdown.component';
 
 @Component({
   selector: 'app-data-table',
