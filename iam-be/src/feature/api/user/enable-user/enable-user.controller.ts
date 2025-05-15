@@ -7,6 +7,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -14,9 +15,10 @@ import {
 import { Authorize } from '@auth/authorize.decorator';
 import { EnableUserResponse } from './enable-user-response';
 import { BaseController } from '@core/base.controller';
+import { Role } from '@prisma/client';
 
 @ApiTags('User')
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @Controller('/users/:id/enable')
 export class EnableUserController extends BaseController {
   @Put()
@@ -27,7 +29,7 @@ export class EnableUserController extends BaseController {
     description: 'User successfully enabled',
     type: EnableUserResponse,
   })
-  // @Authorize(/* Roles if needed */)
+  @Authorize(Role.MODRATOR)
   async execute(
     @Param('id') id: string,
   ): Promise<EnableUserResponse> {

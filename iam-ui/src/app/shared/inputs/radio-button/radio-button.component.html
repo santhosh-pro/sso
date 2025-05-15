@@ -1,0 +1,36 @@
+<div class="flex items-center gap-3">
+  <label class="relative align-baseline flex items-center rounded-full cursor-pointer" [for]="id()">
+    @if(ngControl?.name) {
+      <input type="radio"
+             [name]="groupName()"
+             [value]="value()"
+             [attr.name]="groupName()"
+             [attr.value]="value()"
+             [formControl]="formControl"
+             (change)="onRadioSelected($event)"
+             class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border-2 border-neutral-600 text-neutral-900 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-primary-200 before:opacity-0 before:transition-opacity checked:border-primary-500 checked:before:bg-primary-500 hover:before:opacity-10"
+             [id]="id()"/>
+    } @else {
+      <input type="radio"
+             [name]="groupName()"
+             [value]="value()"
+             [attr.name]="groupName()"
+             [attr.value]="value()"
+             [disabled]="formControl.disabled"
+             [checked]="formControl.value"
+             (change)="onRadioSelected($event)"
+             class="before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-full border-2 border-neutral-600 text-neutral-900 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-primary-200 before:opacity-0 before:transition-opacity checked:border-primary-500 checked:before:bg-primary-500 hover:before:opacity-10"
+             [id]="id()"/>
+    }
+
+    <span
+      class="absolute text-primary-500 transition-opacity opacity-0 pointer-events-none top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 peer-checked:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5" viewBox="0 0 16 16" fill="currentColor">
+          <circle data-name="ellipse" cx="8" cy="8" r="8"></circle>
+        </svg>
+      </span>
+  </label>
+  @if(title()) {
+    <label class="text-body2 cursor-pointer select-none" [for]="id()">{{ title() }}</label>
+  }
+</div>

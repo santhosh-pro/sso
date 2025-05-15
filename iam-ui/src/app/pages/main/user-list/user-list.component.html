@@ -1,0 +1,18 @@
+  <div class="w-full sm:px-4 h-full">
+    <div class="app-page-content h-full">
+      <app-data-table
+        class="block h-full"
+        [columnGroups]="columnGroups"
+        [state]="applicationState"
+        (onActionPerformed)="onAction($event)"
+        (tableStateChanged)="getUserList($event)"
+        [(ngModel)]="tableState"
+        (filterChanged)="onFilterChanged($event)"
+        (onRowClicked)="onRowClicked($event)"
+      >
+    <div class="flex gap-3 items-center">
+            <app-button [iconSrc]="'icons/plus.svg'" (buttonClick)="onCreate()" type="button">Create</app-button>
+          </div>
+      </app-data-table>
+    </div>
+  </div>

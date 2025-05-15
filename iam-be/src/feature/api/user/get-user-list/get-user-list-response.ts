@@ -30,7 +30,6 @@ class GetUserListItem {
   roleName: string;
 }
 
-
 export class GetUserListResponse {
   @ApiProperty()
   successMessage: string;

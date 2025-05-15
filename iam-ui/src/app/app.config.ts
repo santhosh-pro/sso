@@ -3,17 +3,22 @@ import { provideRouter, withComponentInputBinding, withEnabledBlockingInitialNav
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { provideNgxMask } from 'ngx-mask';
+import { provideAngularSvgIcon } from 'angular-svg-icon';
+import { authInterceptor } from './auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes, withComponentInputBinding(), withEnabledBlockingInitialNavigation(),
       withRouterConfig({
         onSameUrlNavigation: 'reload',
       }),
       withViewTransitions()),
     provideClientHydration(withEventReplay()),
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+    provideNgxMask(),
+    provideAngularSvgIcon()
   ]
 };

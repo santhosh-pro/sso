@@ -1,0 +1,25 @@
+<app-base-input [title]="label()" [fullWidth]="fullWidth()" [isRequiredField]="hasRequiredValidator()">
+  <div input class="relative flex items-center w-full text-neutral-400 bg-white shadow-1 rounded-md">
+    <textarea
+      class="w-full p-2 placeholder-neutral-400 text-black rounded-md border-none outline-none focus:border-none ring-1 ring-neutral-300 focus:ring-primary-500 focus:ring-2 transition duration-300"
+              [formControl]="formControl"
+
+              [rows]="rows()"
+              [placeholder]="placeholder()"
+              (blur)="onTouched()"
+              (input)="onValueChange($event)">
+  </textarea>
+  </div>
+</app-base-input>
+
+@if (formControl.errors && hasErrors) {
+  <div class="mt-1">
+    <span class="text-caption text-red-500">{{ formControl.errors | humanizeFormMessages: errorMessages() }}</span>
+  </div>
+} @else {
+  @if (showErrorSpace()) {
+    <div class="mt-1">
+      <span class="text-caption text-transparent">.</span>
+    </div>
+  }
+}

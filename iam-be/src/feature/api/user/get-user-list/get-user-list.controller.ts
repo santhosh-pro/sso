@@ -2,20 +2,19 @@ import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Authorize } from '@auth/authorize.decorator';
 import { BaseController } from '@core/base.controller';
-import { Prisma } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { GetUserListRequest } from './get-user-list-request';
 import { GetUserListResponse } from './get-user-list-response';
-import { SortingDirection } from '@core/models/sorting-direction';
 import { SuccessMessages } from '@core/models/message';
 
 @ApiTags('User')
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @Controller('/users')
 export class GetUserListController extends BaseController {
   @Get()
   @ApiResponse({ status: HttpStatus.OK, description: '', type: GetUserListResponse })
   @ApiOperation({ operationId: 'getUserList' })
-  // @Authorize(/* Roles */)
+   @Authorize(Role.MODRATOR)
   @HttpCode(200)
   async execute(@Query() request: GetUserListRequest): Promise<GetUserListResponse> {
     return await this.prismaService.client(async ({ dbContext }) => {

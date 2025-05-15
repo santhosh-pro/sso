@@ -3,6 +3,6 @@ export const environment = {
     oidc: {
         issuer: 'http://localhost:3000',
         clientId: 'app1',
-        redirectUri: 'http://localhost:4200',
+        redirectUri: 'http://localhost:4201/callback',
     }
 };

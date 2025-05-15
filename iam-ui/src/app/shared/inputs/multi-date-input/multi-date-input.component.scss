@@ -1,0 +1,15 @@
+:host {
+    display: block;
+  }
+  
+  input {
+    // @apply w-full;
+  }
+  
+  .chip {
+    // @apply bg-primary-100 text-primary-900 text-sm px-2 py-1 rounded-full flex items-center gap-1;
+  }
+  
+  .chip button {
+    // @apply text-red-500 hover:text-red-700;
+  }

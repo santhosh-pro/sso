@@ -7,10 +7,12 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "api:gen": "orval --config ./orval.config.ts && node post-process-orval.js",
     "serve:ssr:iam-ui": "node dist/iam-ui/server/server.mjs"
   },
   "private": true,
   "dependencies": {
+    "@angular/cdk": "^19.2.11",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
@@ -21,6 +23,8 @@
     "@angular/router": "^19.2.0",
     "@angular/ssr": "^19.2.8",
     "express": "^4.18.2",
+    "angular-svg-icon": "^19.1.1",
+    "ngx-mask": "^19.0.6",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -38,6 +42,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "orval": "^7.9.0",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.7.2"
   }

@@ -1,14 +1,17 @@
 import { Controller, Put, HttpCode, HttpStatus, Param, HttpException } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { DisableUserResponse } from './disable-user-response';
 import { BaseController } from '@core/base.controller';
+import { Authorize } from '@auth/authorize.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('User')
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @Controller('/users/:id/disable')
 export class DisableUserController extends BaseController {
   @Put()
@@ -19,7 +22,7 @@ export class DisableUserController extends BaseController {
     description: 'User successfully disabled/enabled',
     type: DisableUserResponse,
   })
-  // @Authorize(/* Roles if needed */)
+  @Authorize(Role.MODRATOR)
   async execute(
     @Param('id') id: string,
   ): Promise<DisableUserResponse> {

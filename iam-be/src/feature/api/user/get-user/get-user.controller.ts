@@ -15,9 +15,10 @@ import {
 import { Authorize } from '@auth/authorize.decorator';
 import { GetUserResponse, GetUserResponseData } from './get-user-response';
 import { BaseController } from '@core/base.controller';
+import { Role } from '@prisma/client';
 
 @ApiTags('User')
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @Controller('/users')
 export class GetUserController extends BaseController {
   @Get(':id')
@@ -28,7 +29,7 @@ export class GetUserController extends BaseController {
     description: 'Returns user by ID',
     type: GetUserResponse,
   })
-  // @Authorize(/* Roles if needed */)
+   @Authorize(Role.MODRATOR)
   async execute(@Param('id') id: string): Promise<GetUserResponse> {
     return await this.prismaService.client(async ({ dbContext }) => {
       const user = await dbContext.user.findUnique({

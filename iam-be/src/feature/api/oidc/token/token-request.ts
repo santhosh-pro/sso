@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
 
 export class TokenRequest {

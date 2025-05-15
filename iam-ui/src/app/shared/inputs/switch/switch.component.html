@@ -1,0 +1,48 @@
+<!--<label for="toggle" class="flex items-center cursor-pointer">-->
+<!--  <div class="relative">-->
+<!--    <input id="toggle" type="checkbox" class="sr-only peer" [checked]="checked()" (change)="toggleSwitch()">-->
+<!--    <div class="w-16 h-8 bg-gray-100 rounded-full shadow-inner"></div>-->
+<!--    <span-->
+<!--      class="absolute left-1 top-1 w-2/5 h-4/5 bg-primary-500 rounded-full peer-checked:bg-primary-500 peer-checked:left-8 transition-all duration-300"></span>-->
+<!--  </div>-->
+<!--  <div class="ml-3 text-gray-700 font-medium">Toggle</div>-->
+<!--</label>-->
+
+<!--<div class="flex items-center cursor-pointer">-->
+<!--  <label id="id()" class="flex items-center m-0">-->
+<!--    <div class="relative">-->
+<!--      <input [id]="id()" type="checkbox" class="sr-only peer"-->
+<!--             [checked]="formControl.value"-->
+<!--             (change)="onSwitchSelected($event)">-->
+<!--      <div class="w-16 h-8 bg-gray-100 peer-checked:bg-primary-50 rounded-full shadow-inner"></div>-->
+<!--      <span-->
+<!--        class="w-2/5 h-4/5 bg-primary-500 absolute rounded-full left-1 top-1 peer-checked:bg-primary-500 transition-all duration-300"-->
+<!--        [ngClass]="formControl.value ? 'translate-x-7' : 'translate-x-0'">-->
+<!--    </span>-->
+<!--    </div>-->
+<!--    @if (title()) {-->
+<!--      <label class="text-body2 cursor-pointer select-none" [for]="id()">{{ title() }}</label>-->
+<!--    }-->
+<!--  </label>-->
+<!--</div>-->
+
+
+<div class="flex items-center">
+  <label [for]="id()" class="flex m-0 items-center cursor-pointer">
+    <!-- Toggle Switch -->
+    <div class="relative">
+      <input type="checkbox" [id]="id()" [name]="id()"
+             class="sr-only"
+             [disabled]="formControl.disabled"
+             [checked]="formControl.value"
+             (change)="onSwitchSelected($event)"/>
+      <div class="toggle-bg peer-checked:bg-primary-500">
+        <div class="dot">
+        </div>
+      </div>
+    </div>
+    @if (title()) {
+      <span class="toggle-label text-sm text-gray-700">{{ title() }}</span>
+    }
+  </label>
+</div>

@@ -21,7 +21,7 @@ import { Role } from '@prisma/client';
 import { BcryptService } from '@bcrypt/bcrypt.service';
 
 @ApiTags('User')
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @Controller('/users')
 export class CreateUserController extends BaseController {
   @Inject() public bcryptService: BcryptService;
@@ -34,7 +34,7 @@ export class CreateUserController extends BaseController {
     description: 'User successfully created',
     type: CreateUserResponse,
   })
-  // @Authorize(/* Roles if needed */)
+  @Authorize(Role.MODRATOR)
   async execute(
     @Body() body: CreateUserRequest,
   ): Promise<CreateUserResponse> {

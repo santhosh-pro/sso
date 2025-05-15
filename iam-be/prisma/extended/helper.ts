@@ -60,7 +60,7 @@ export function decodeJwtToken(
 
   const token = authorizationHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(token, process.env.JWT_PUBLIC_KEY as string);
     return decoded;
   } catch {
     throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);

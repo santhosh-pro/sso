@@ -1,4 +1,4 @@
-import { User } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 
 type UserSeed = Omit<
   User,
@@ -22,5 +22,6 @@ export const userSeeds: UserSeed[] = [
     phoneNumber: '+91 7550042727',
     isVerified: true,
     isActive: true,
+    role: Role.MODRATOR, // Replace 'USER' with the appropriate role value
   },
 ];

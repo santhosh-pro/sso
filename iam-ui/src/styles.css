@@ -2,3 +2,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+.app-container {
+  @apply w-full p-4 mx-auto flex flex-col h-full;
+}
+
+/* .app-page-content {
+  @apply p-4 container mx-auto;
+} */
+
+.app-container-padding {
+  @apply p-4;
+}
+
+.app-header {
+  @apply flex justify-between items-center gap-5 p-4 bg-white;
+}
+
+.line {
+  @apply h-[1px] bg-neutral-300 w-full;
+}
+
+.line-light {
+  @apply h-[1px] bg-neutral-100 w-full;
+}
+
+
+.cdk-overlay-container:focus,
+.cdk-overlay-pane:focus,
+.cdk-overlay-container *:focus {
+outline: none !important;
+}

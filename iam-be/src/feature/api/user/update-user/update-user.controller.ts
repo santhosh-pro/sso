@@ -17,9 +17,10 @@ import { Authorize } from '@auth/authorize.decorator';
 import { UpdateUserRequest } from './update-user-request';
 import { UpdateUserResponse } from './update-user-response';
 import { BaseController } from '@core/base.controller';
+import { Role } from '@prisma/client';
 
 @ApiTags('User')
-// @ApiBearerAuth()
+@ApiBearerAuth()
 @Controller('/users')
 export class UpdateUserController extends BaseController {
   @Put(':id')
@@ -30,7 +31,7 @@ export class UpdateUserController extends BaseController {
     description: 'User successfully updated',
     type: UpdateUserResponse,
   })
-  // @Authorize(/* Roles if needed */)
+     @Authorize(Role.MODRATOR)
   async execute(
     @Param('id') id: string,
     @Body() body: UpdateUserRequest,

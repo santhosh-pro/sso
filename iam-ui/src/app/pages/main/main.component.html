@@ -1,0 +1,48 @@
+<div class="bg-gradient-to-br from-purple-100 via-pink-50 to-yellow-100 min-h-screen flex flex-col">
+
+  <!-- Top Navigation Bar -->
+  <!-- Add this in your component HTML -->
+  <header class="bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg w-full z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+
+        <!-- Logo / Brand -->
+        <div class="flex-shrink-0 text-2xl font-bold tracking-wide">
+          Identity Access Management
+        </div>
+
+        <!-- Profile + Dropdown -->
+        <div class="relative hidden md:flex items-center space-x-4">
+          <button class="flex items-center space-x-2 hover:text-yellow-300 transition focus:outline-none" (click)="toggleDropdown()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5.121 17.804A10.05 10.05 0 0112 15c2.21 0 4.253.722 5.879 1.938M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span class="text-sm hidden sm:inline">Santhosh</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.65a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          <!-- Dropdown Menu -->
+          @if (dropdownOpen) {
+            <div class="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg py-2 z-50">
+              <a routerLink="/profile" class="block px-4 py-2 hover:bg-gray-100">View / Update Profile</a>
+              <button (click)="logout()" class="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
+            </div>
+          }
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+
+
+  <main class="flex-1 p-2 sm:p-6 min-h-0 overflow-hidden">
+
+    <app-breadcrumb></app-breadcrumb>
+    <router-outlet />
+
+  </main>

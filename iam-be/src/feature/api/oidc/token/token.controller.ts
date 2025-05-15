@@ -10,13 +10,11 @@ import { TokenResponse } from './token-response';
 import { BaseController } from '@core/base.controller';
 import { AuthService } from '@auth/auth.service';
 import { TokenRequest } from './token-request';
-import { OAuthService } from '../../auth.service';
 
 @ApiTags('OIDC')
 @Controller('protocol/openid-connect/token')
 export class TokenController extends BaseController {
   @Inject() public authService: AuthService;
-  @Inject() public oAuthService: OAuthService;
 
   @Post()
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -64,8 +62,16 @@ export class TokenController extends BaseController {
           data: { isUsed: true },
         });
 
-        const accessToken = await this.authService.sign({ sub: 'authCode.userId' });
-        const newRefreshToken = await this.authService.sign({ sub: 'authCode.userId', type: 'refresh' });
+        const user = await dbContext.user.findUnique({
+          where: { id: authCode.userId },
+        });
+
+        if (!user) {
+          throw new BadRequestException('User not found');
+        }
+
+        const accessToken = await this.authService.sign({ sub: user.id, role: user.role });
+        const newRefreshToken = await this.authService.sign({ sub: user.id, role: user.role, type: 'refresh' });
 
         return {
           access_token: accessToken,
