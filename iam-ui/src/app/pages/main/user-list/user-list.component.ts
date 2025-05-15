@@ -9,10 +9,11 @@ import { ColumnGroup, FilterEvent, TableActionEvent, TableStateEvent, DataTableC
 import { OverlayService } from 'src/app/shared/components/overlay/overlay.service';
 import { ButtonComponent } from "../../../shared/components/button/button.component";
 import { CreateUserComponent } from './create-user/create-user.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
-  imports: [DataTableComponent, FormsModule, ButtonComponent],
+  imports: [DataTableComponent, FormsModule, ButtonComponent, RouterModule],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css'
 })

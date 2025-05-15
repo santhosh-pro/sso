@@ -13,11 +13,24 @@ export const routes: Routes = [
     {
         path: 'main',
         loadComponent: () => import('./pages/main/main.component').then(m => m.MainComponent),
-        title: 'Home',
         children: [
             {
                 path: '',
-                loadComponent:() => import('./pages/main/user-list/user-list.component').then(m => m.UserListComponent),
+                loadComponent: () => import('./pages/main/user-list/user-list.component').then(m => m.UserListComponent),
+                // children: [
+                //     {
+                //         path: 'create',
+                //         loadComponent: () =>
+                //             import('./pages/main/user-list/create-user/create-user-model.component')
+                //                 .then(m => m.CreateUserModelComponent)
+                //     }
+                // ]
+            },
+            {
+                path:'create',
+                loadComponent: () =>
+                    import('./pages/main/user-list/create-user/create-user.component')
+                        .then(m => m.CreateUserComponent)
             }
         ]
     },

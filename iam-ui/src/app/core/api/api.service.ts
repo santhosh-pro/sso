@@ -37,6 +37,7 @@ import type {
   EnableUserResponse,
   ForgotPasswordRequest,
   ForgotPasswordResponse,
+  GetRoleListResponse,
   GetUserListParams,
   GetUserListResponse,
   GetUserResponse,
@@ -227,6 +228,27 @@ export class ApiService {
     return this.http.post<TData>(
       `${environment.apiUrl}/users`,
       createUserRequest,options
+    );
+  }
+
+/**
+ * Operation ID: getRoleList
+
+
+ */
+ getRoleList<TData = GetRoleListResponse>(
+     options?: Omit<HttpClientOptions, 'observe'> & { observe?: 'body' }
+  ): Observable<TData>;
+    getRoleList<TData = GetRoleListResponse>(
+     options?: Omit<HttpClientOptions, 'observe'> & { observe?: 'response' }
+  ): Observable<AngularHttpResponse<TData>>;
+    getRoleList<TData = GetRoleListResponse>(
+     options?: Omit<HttpClientOptions, 'observe'> & { observe?: 'events' }
+  ): Observable<HttpEvent<TData>>;getRoleList<TData = GetRoleListResponse>(
+     options?: HttpClientOptions
+  ): Observable<TData>  {
+    return this.http.get<TData>(
+      `${environment.apiUrl}/roles`,options
     );
   }
 
@@ -461,6 +483,7 @@ export type UpdateUserClientResult = NonNullable<UpdateUserResponse>
 export type GetUserClientResult = NonNullable<GetUserResponse>
 export type GetUserListClientResult = NonNullable<GetUserListResponse>
 export type CreateUserClientResult = NonNullable<CreateUserResponse>
+export type GetRoleListClientResult = NonNullable<GetRoleListResponse>
 export type EnableUserClientResult = NonNullable<EnableUserResponse>
 export type DisableUserClientResult = NonNullable<DisableUserResponse>
 export type TokenClientResult = NonNullable<TokenResponse>

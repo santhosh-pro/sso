@@ -1,5 +1,71 @@
 <app-base-overlay [title]="'Create User'">
-    <div body>
+  <div body>
+    <form class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5" [formGroup]="form" (submit)="onSubmit()">
+      <!-- First Name -->
+      <div>
+        <app-text-input
+          [label]="'First Name'"
+          [fullWidth]="true"
+          [placeholder]="'First Name'"
+          formControlName="firstName"
+        ></app-text-input>
+      </div>
 
-    </div>
+      <!-- Last Name -->
+      <div>
+        <app-text-input
+          [label]="'Last Name'"
+          [fullWidth]="true"
+          [placeholder]="'Last Name'"
+          formControlName="lastName"
+        ></app-text-input>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <app-text-input
+          [label]="'Email'"
+          [fullWidth]="true"
+          [placeholder]="'Email'"
+          formControlName="email"
+        ></app-text-input>
+      </div>
+
+      <!-- Phone Number -->
+      <div>
+        <app-text-input
+          [label]="'Phone Number'"
+          [fullWidth]="true"
+          [placeholder]="'Phone Number'"
+          formControlName="phoneNumber"
+        ></app-text-input>
+      </div>
+
+      <!-- Roles -->
+      <div>
+        <app-single-selection-field
+          [title]="'Roles'"
+          [items]="roleList.response()?.data ?? []"
+          [display]="'name'"
+          [id]="'id'"
+          formControlName="role"
+        ></app-single-selection-field>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <app-text-input
+          [label]="'Password'"
+          [fullWidth]="true"
+          [placeholder]="'Password'"
+          formControlName="password"
+        ></app-text-input>
+      </div>
+
+      <!-- Submit Button (full width below form) -->
+      <div class="md:col-span-2 flex justify-center pt-2">
+        <app-button [loading]="createUser.loading()" type="submit">Submit</app-button>
+      </div>
+    </form>
+  </div>
 </app-base-overlay>

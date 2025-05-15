@@ -7,6 +7,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideNgxMask } from 'ngx-mask';
 import { provideAngularSvgIcon } from 'angular-svg-icon';
 import { authInterceptor } from './auth.interceptor';
+import { provideNglConfig } from '@shared/provide-ngl-config';
 
 export const appConfig: ApplicationConfig = {
   providers: [

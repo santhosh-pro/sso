@@ -1,4 +1,4 @@
-import { Controller, Put, HttpCode, HttpStatus, Body, Param, HttpException } from '@nestjs/common';
+import { Controller, Put, HttpCode, HttpStatus, Body, HttpException } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,

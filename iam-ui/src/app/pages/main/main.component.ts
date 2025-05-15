@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { OAuthService } from 'src/app/shared/oauth.service';
 import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcrumb.component";
+import { OverlayService } from '@shared/public-api';
 
 @Component({
   selector: 'app-main',
@@ -11,11 +12,13 @@ import { BreadcrumbComponent } from "../../shared/components/breadcrumb/breadcru
 })
 export class MainComponent {
   private auth = inject(OAuthService);
+  private overlayService = inject(OverlayService);
 
   dropdownOpen = false;
 
   toggleDropdown() {
-    this.dropdownOpen = !this.dropdownOpen;
+    this.overlayService.openNearElement(
+    )
   }
 
   logout() {

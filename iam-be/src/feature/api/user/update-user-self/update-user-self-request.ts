@@ -1,6 +1,6 @@
-import { ErrorMessages } from "@core/models/message";
-import { ApiPropertyOptional } from "@nestjs/swagger";
-import { IsOptional, IsString, IsEmail } from "class-validator";
+import { ErrorMessages } from '@core/models/message';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, IsEmail } from 'class-validator';
 
 export class UpdateUserSelfRequest {
    @ApiPropertyOptional({ example: 'John', description: 'First name of the user' })
